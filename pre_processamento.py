@@ -35,6 +35,14 @@ for ano in anos:
 # Une todos os DataFrames, alinhando colunas
 if dfs:
     df_total = pd.concat(dfs, ignore_index=True, sort=True)
+
+    # Remover colunas extras, se existirem
+    cols_to_remove = ['id', 'uso_solo', 'regional', 'delegacia', 'uop', 'ano']
+    cols_to_remove = [col for col in cols_to_remove if col in df_total.columns]
+    if cols_to_remove:
+        df_total = df_total.drop(columns=cols_to_remove)
+        print(f'Colunas removidas: {cols_to_remove}')
+
     output_path = os.path.join(BASE_DIR, "acidentes_2007_2025.csv")
     df_total.to_csv(output_path, index=False, encoding='utf-8')
     print(f"Arquivo final salvo em: {output_path}")

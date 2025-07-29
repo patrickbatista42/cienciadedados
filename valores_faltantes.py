@@ -48,8 +48,12 @@ def is_faltante(x):
         return True
     return False
 
+# Ignorar latitude e longitude na filtragem de linhas
+ignore_cols = {'latitude', 'longitude'}
+cols_to_check = [col for col in df.columns if col.lower() not in ignore_cols]
+
 total_antes = len(df)
-df = df[~df.apply(lambda row: any(is_faltante(x) for x in row), axis=1)]
+df = df[~df[cols_to_check].apply(lambda row: any(is_faltante(x) for x in row), axis=1)]
 print(f'Removidas {total_antes - len(df)} linhas com valores faltantes.')
 
 # Exibe análise final de valores faltantes

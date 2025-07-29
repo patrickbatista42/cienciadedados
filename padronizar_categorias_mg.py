@@ -156,6 +156,22 @@ for col in df.columns:
         # Para todas as demais colunas categóricas, padronizar ignorado/ignorada para Outros
         df[col] = df[col].apply(lambda x: 'Outros' if isinstance(x, str) and x.strip().lower() in ['ignorado', 'ignorada'] else x)
 
+# Padronização semântica dos nomes dos municípios
+if 'municipio' in df.columns:
+    print('Padronizando nomes dos municípios por similaridade...')
+    municipios_unicos = sorted(df['municipio'].dropna().unique())
+    # Usa a própria lista como referência de válidos (poderia ser uma lista externa oficial)
+    municipios_validos = municipios_unicos.copy()
+    def padronizar_municipio(val):
+        if pd.isnull(val) or val.strip() == '':
+            return val
+        match = get_close_matches(val, municipios_validos, n=1, cutoff=0.85)
+        if match:
+            return match[0]
+        return val
+    df['municipio'] = df['municipio'].apply(padronizar_municipio)
+    print('Padronização de municípios concluída.')
+
 print(f'Salvando arquivo padronizado em: {arquivo_entrada}')
 df.to_csv(arquivo_entrada, index=False, encoding='utf-8')
 print('Concluído!') 

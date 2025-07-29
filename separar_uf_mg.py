@@ -26,7 +26,7 @@ mg = df[df[nome_col_uf] == 'MG']
 outros = df[df[nome_col_uf] != 'MG']
 
 # Remove as colunas indesejadas
-colunas_remover = ['uso_solo', 'municipio', 'id']
+colunas_remover = ['uso_solo', 'id']
 mg = mg.drop(columns=[c for c in colunas_remover if c in mg.columns])
 outros = outros.drop(columns=[c for c in colunas_remover if c in outros.columns])
 
